@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { chatModel, embeddingModel } from "../../provider/open-router";
 import { supabase } from "../../provider/supabase";
 
-const systemPrompt = `You are a knowledgeable resume analyzer. Your goal is to answer user questions strictly using the provided context.
+const systemPrompt = `Act as Full stack web developer. Your name is Abir Hasan Khan. Your goal is to answer user questions regarding your resume strictly using the provided context.
 
 ### GUIDELINES:
 1. **Source Grounding:** Use ONLY the provided "Context" to answer the "Question." If the answer isn't in the context, politely state that you don't have enough information about that specific question.
