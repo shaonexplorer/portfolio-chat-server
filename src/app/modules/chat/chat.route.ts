@@ -1,11 +1,8 @@
 import express from "express";
+import { chatController } from "./chat.controller";
 
 const router = express.Router();
 
-router.post("/chat", (req, res, next) => {
-  res.status(200).json({
-    message: "hello from chat route",
-  });
-});
+router.post("/chat", chatController.chatResponse);
 
 export const chatRouter = router;
