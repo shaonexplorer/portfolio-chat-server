@@ -1,16 +1,19 @@
 {
   "type": "module",
-  "name": "task-management-app",
+  "name": "portfolio-chat-server",
   "version": "1.0.0",
-  "description": "simple task management application build with typescript, node/express ",
+  "description": "chat server for portfolio chat application built with express and vercel AI SDK",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "build": "npx prisma generate && npx tsc",
+    "start": "node dist/src/server.js"
   },
   "author": "abir hasan",
   "license": "ISC",
   "dependencies": {
+    "@openrouter/ai-sdk-provider": "^2.9.0",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "cookie-parser": "^1.4.7",

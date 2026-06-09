@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Request, Response, NextFunction } from "express";
+import { chatRouter } from "./app/modules/chat/chat.route.js";
 
 const app = express();
 
@@ -9,7 +10,7 @@ app.use(
   cors({
     origin: [],
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -17,8 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  res.send("Welcome to the Task Management App API");
+  res.send("Welcome to the Portfolio Chat Server API");
 });
+
+app.use("/api/v1/", chatRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({
