@@ -1,7 +1,7 @@
 import { embed, generateText, streamText } from "ai";
 import { NextFunction, Request, Response } from "express";
-import { chatModel, embeddingModel } from "../../provider/open-router";
-import { supabase } from "../../provider/supabase";
+import { chatModel, embeddingModel } from "../../provider/open-router.js";
+import { supabase } from "../../provider/supabase.js";
 
 const systemPrompt = `Act as Full stack web developer. Your name is Abir Hasan Khan. Your goal is to answer user questions regarding your resume strictly using the provided context.
 

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { chatService } from "./chat.service";
+import { catchAsync } from "../../utils/catch-async.js";
+import { chatService } from "./chat.service.js";
 
 const chatResponse = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

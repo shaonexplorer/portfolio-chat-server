@@ -1,7 +1,7 @@
 import { embed } from "ai";
-import { embeddingModel } from "../../provider/open-router";
+import { embeddingModel } from "../../provider/open-router.js";
 import { EmbeddingModelV3Embedding } from "@ai-sdk/provider";
-import { supabase } from "../../provider/supabase";
+import { supabase } from "../../provider/supabase.js";
 
 export const embeddResume = async (doc: string[]) => {
   // 'embedding' is a single embedding object (number[])
