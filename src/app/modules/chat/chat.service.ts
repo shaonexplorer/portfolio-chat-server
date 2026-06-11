@@ -1,4 +1,4 @@
-import { embed, generateText } from "ai";
+import { embed, generateText, streamText } from "ai";
 import { NextFunction, Request, Response } from "express";
 import { chatModel, embeddingModel } from "../../provider/open-router";
 import { supabase } from "../../provider/supabase";
@@ -41,14 +41,16 @@ const chatResponse = async (
   const contextArray = data.map((d: { content: string }) => d.content);
   const context = contextArray.join("\n");
 
-  const { text } = await generateText({
+  const result = await streamText({
     model: chatModel,
 
     system: systemPrompt,
     prompt: `context: ${context},\n\n question: ${query}`,
   });
 
-  return text;
+  // console.log({ result: result.toUIMessageStreamResponse() });
+
+  return result;
 };
 
 export const chatService = {
