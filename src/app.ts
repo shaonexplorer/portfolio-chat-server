@@ -8,7 +8,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://portfolio-june-26.onrender.com"],
+    origin: [
+      "https://portfolio-june-26.onrender.com",
+      "https://localhost:3000",
+    ],
     credentials: true,
   }),
 );

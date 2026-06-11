@@ -1,4 +1,4 @@
-import { embed, generateText, streamText } from "ai";
+import { convertToModelMessages, embed, generateText, streamText } from "ai";
 import { NextFunction, Request, Response } from "express";
 import { chatModel, embeddingModel } from "../../provider/open-router.js";
 import { supabase } from "../../provider/supabase.js";
