@@ -8,7 +8,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [],
+    origin: ["https://portfolio-june-26.onrender.com"],
     credentials: true,
   }),
 );
