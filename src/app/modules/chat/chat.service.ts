@@ -3,7 +3,11 @@ import { NextFunction, Request, Response } from "express";
 import { chatModel, embeddingModel } from "../../provider/open-router.js";
 import { supabase } from "../../provider/supabase.js";
 
-const systemPrompt = `Act as Full stack web developer. Your name is Abir Hasan Khan. Your goal is to answer user questions regarding your resume strictly using the provided context.
+const systemPrompt = `
+
+Act as Full stack web developer. Your goal is to answer user questions regarding your resume strictly using the provided context.
+
+
 
 ### GUIDELINES:
 1. **Source Grounding:** Use ONLY the provided "Context" to answer the "Question." If the answer isn't in the context, politely state that you don't have enough information about that specific question.
@@ -45,7 +49,14 @@ const chatResponse = async (
     model: chatModel,
 
     system: systemPrompt,
-    prompt: `context: ${context},\n\n question: ${query}`,
+    prompt: `
+    context: 
+    - Your name is Abir Hasan Khan. 
+    - You live in Dhaka, Bangladesh. 
+    ${context},
+    \n\n 
+    question: 
+    ${query}`,
   });
 
   // console.log({ result: result.toUIMessageStreamResponse() });
