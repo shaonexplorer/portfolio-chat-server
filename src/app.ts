@@ -3,15 +3,13 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Request, Response, NextFunction } from "express";
 import { chatRouter } from "./app/modules/chat/chat.route.js";
+import { sendMessageRouter } from "./app/modules/mail/mail.router.js";
 
 const app = express();
 
 app.use(
   cors({
-    origin: [
-      "https://portfolio-june-26.onrender.com",
-      "http://localhost:3000",
-    ],
+    origin: ["https://portfolio-june-26.onrender.com", "http://localhost:3000"],
     credentials: true,
   }),
 );
@@ -25,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/", chatRouter);
+app.use("/api/v1/mail/", sendMessageRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({
