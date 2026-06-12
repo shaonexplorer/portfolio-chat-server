@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { transporter } from "../../provider/node-mailer.js";
+
 import ejs from "ejs";
 import path from "path";
+import { resend } from "../../provider/resend.js";
 
 const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
   const senderInfo = req.body;
@@ -26,16 +27,23 @@ const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
     );
     const htmlContent = await ejs.renderFile(templatePath, emailData);
 
-    const info = await transporter.sendMail({
-      from: senderInfo.email, // sender address
-      to: "shaonexplorer@gmail.com", // list of recipients
-      subject: senderInfo.subject, // subject line
-      //   text: `Email from : ${senderInfo.email}
-      //          Email body : ${senderInfo.text}`, // plain text body
-      html: htmlContent, // HTML body
+    // const info = await transporter.sendMail({
+    //   from: senderInfo.email, // sender address
+    //   to: "shaonexplorer@gmail.com", // list of recipients
+    //   subject: senderInfo.subject, // subject line
+    //   //   text: `Email from : ${senderInfo.email}
+    //   //          Email body : ${senderInfo.text}`, // plain text body
+    //   html: htmlContent, // HTML body
+    // });
+
+    const info = await resend.emails.send({
+      from: senderInfo.email,
+      to: "shaonexplorer@gmail.com",
+      subject: "Hello World",
+      html: htmlContent,
     });
 
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent: %s", info);
 
     return info;
   } catch (err) {
