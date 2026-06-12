@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { transporter } from "../../provider/node-mailer";
+import { transporter } from "../../provider/node-mailer.js";
 import ejs from "ejs";
 import path from "path";
 

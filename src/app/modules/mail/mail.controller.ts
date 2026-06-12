@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { sendMessageService } from "./mail.service";
+import { catchAsync } from "../../utils/catch-async.js";
+import { sendMessageService } from "./mail.service.js";
 
 const sendMessage = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
