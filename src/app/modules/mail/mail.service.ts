@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express";
 
 import ejs from "ejs";
 import path from "path";
-import { resend } from "../../provider/resend.js";
+
+import { gmail } from "../../provider/google.js";
 
 const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
   const senderInfo = req.body;
@@ -36,11 +37,39 @@ const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
     //   html: htmlContent, // HTML body
     // });
 
-    const info = await resend.emails.send({
-      from: senderInfo.email,
-      to: "shaonexplorer@gmail.com",
-      subject: "Hello World",
-      html: htmlContent,
+    // const info = await resend.emails.send({
+    //   from: senderInfo.email,
+    //   to: "shaonexplorer@gmail.com",
+    //   subject: "Hello World",
+    //   html: htmlContent,
+    // });
+
+    // 1. Create your email structure (Your EJS string still goes here)
+    const utf8Subject = `=?utf-8?B?${Buffer.from(senderInfo.subject).toString("base64")}?=`;
+    const messageParts = [
+      `From: Your Name <${senderInfo.email}>`,
+      `To: shaonexplorer@gmail.com`,
+      "Content-Type: text/html; charset=utf-8",
+      "MIME-Version: 1.0",
+      `Subject: ${utf8Subject}`,
+      "",
+      htmlContent, // <-- Your EJS compiled template HTML
+    ];
+    const message = messageParts.join("\n");
+
+    // 2. Base64 encode the email for Google's API
+    const encodedMessage = Buffer.from(message)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    // 3. Send it via HTTP POST request (Never blocked by Render!)
+    const info = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedMessage,
+      },
     });
 
     console.log("Message sent: %s", info);
