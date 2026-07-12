@@ -1,13 +1,18 @@
-import { convertToModelMessages, embed, generateText, streamText } from "ai";
-import { NextFunction, Request, Response } from "express";
+import { embed, streamText } from "ai";
+import { Request } from "express";
 import { chatModel, embeddingModel } from "../../provider/open-router.js";
-import { supabase } from "../../provider/supabase.js";
+import { query } from "../../provider/neon-db.js";
+
+// Embedding dimension for OpenAI text-embedding-3-small
+const EMBEDDING_DIMENSION = 1536;
+
+// Helper function to convert embedding array to PostgreSQL vector string format
+const formatVector = (embedding: number[]): string => {
+  return `[${embedding.join(",")}]`;
+};
 
 const systemPrompt = `
-
 Act as Full stack web developer. Your goal is to answer user questions regarding your resume strictly using the provided context.
-
-
 
 ### GUIDELINES:
 1. **Source Grounding:** Use ONLY the provided "Context" to answer the "Question." If the answer isn't in the context, politely state that you don't have enough information about that specific question.
@@ -19,49 +24,39 @@ Act as Full stack web developer. Your goal is to answer user questions regarding
 - CONTEXT: {context}
 - QUESTION: {question}`;
 
-const chatResponse = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const query = req.body.query;
+const chatResponse = async (req: Request) => {
+  const queryText = req.body.query;
 
   const { embedding } = await embed({
     model: embeddingModel,
-    value: query,
+    value: queryText,
   });
 
-  const { data, error } = await supabase.rpc("match_documents", {
-    query_embedding: embedding, // Array of numbers (the generated vector)
-    match_threshold: 0.15, // Adjust based on your precision needs
-    match_count: 10,
-  });
+  // Call the match_documents function via direct SQL query
+  // Note: Need to format embedding as PostgreSQL vector string format
+  const result = await query(
+    `SELECT * FROM match_documents($1::vector, $2, $3)`,
+    [formatVector(embedding), 0.15, 10]
+  );
 
-  if (error) {
-    console.error("Error executing semantic search:", error);
-    throw new Error(error.message);
-  }
-
-  const contextArray = data.map((d: { content: string }) => d.content);
+  const contextArray = result.rows.map((d: any) => d.content);
   const context = contextArray.join("\n");
 
-  const result = await streamText({
+  const streamResult = streamText({
     model: chatModel,
 
     system: systemPrompt,
     prompt: `
-    context: 
-    - Your name is Abir Hasan Khan. 
-    - You live in Dhaka, Bangladesh. 
+    context:
+    - Your name is Abir Hasan Khan.
+    - You live in Dhaka, Bangladesh.
     ${context},
-    \n\n 
-    question: 
-    ${query}`,
+    \n\n
+    question:
+    ${queryText}`,
   });
 
-  // console.log({ result: result.toUIMessageStreamResponse() });
-
-  return result;
+  return streamResult;
 };
 
 export const chatService = {

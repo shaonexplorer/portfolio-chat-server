@@ -7,6 +7,8 @@ export const openrouter = createOpenRouter({
 
 export const chatModel = openrouter("openai/gpt-oss-120b:free");
 
+// Using OpenAI text-embedding-3-small which produces 1536-dimensional embeddings
+// This is compatible with PostgreSQL HNSW/IVFFlat indexes (max 2000 dimensions)
 export const embeddingModel = openrouter.textEmbeddingModel(
-  "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+  "openai/text-embedding-3-small"
 );

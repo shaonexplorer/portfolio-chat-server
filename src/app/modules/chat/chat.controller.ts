@@ -4,9 +4,7 @@ import { chatService } from "./chat.service.js";
 
 const chatResponse = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await chatService.chatResponse(req, res, next);
-
-    // res.status(200).json({ data });
+    const result = await chatService.chatResponse(req);
 
     result.pipeUIMessageStreamToResponse(res);
   },

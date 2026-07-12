@@ -1,0 +1,81 @@
+-- Neon DB SQL functions for vector search
+-- This file contains the SQL to create the resume table and vector search functions
+--
+-- IMPORTANT: This uses 1536-dimensional embeddings (OpenAI text-embedding-3-small)
+-- which is compatible with PostgreSQL HNSW/IVFFlat indexes (max 2000 dimensions).
+
+-- Enable pgvector extension (must be done in Neon dashboard or via SQL)
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Create the resume table for storing resume chunks with embeddings
+CREATE TABLE IF NOT EXISTS resume (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    embedding vector(1536) NOT NULL
+);
+
+-- Create index for faster vector similarity search
+-- HNSW index supports up to 2000 dimensions, so 1536 is compatible
+CREATE INDEX IF NOT EXISTS idx_resume_embedding ON resume USING hnsw (embedding vector_l2_ops);
+
+-- Function to truncate the resume table (replaces Supabase RPC truncate_resume)
+CREATE OR REPLACE FUNCTION truncate_resume()
+RETURNS void AS $$
+BEGIN
+    TRUNCATE TABLE resume;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to perform semantic search (replaces Supabase RPC match_documents)
+-- Uses cosine similarity for vector matching (1 - distance gives similarity)
+CREATE OR REPLACE FUNCTION match_documents(
+    query_embedding vector(1536),
+    match_threshold float DEFAULT 0.15,
+    match_count int DEFAULT 10
+)
+RETURNS TABLE (
+    id INTEGER,
+    content TEXT,
+    embedding vector(1536),
+    similarity FLOAT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        r.id,
+        r.content,
+        r.embedding,
+        1 - (r.embedding <=> query_embedding) AS similarity
+    FROM resume r
+    WHERE (1 - (r.embedding <=> query_embedding)) >= match_threshold
+    ORDER BY r.embedding <=> query_embedding
+    LIMIT match_count;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Alternative function using L2 distance (Euclidean distance)
+-- Uncomment if you prefer L2 distance over cosine similarity
+-- CREATE OR REPLACE FUNCTION match_documents_l2(
+--     query_embedding vector(1536),
+--     distance_threshold float DEFAULT 0.5,
+--     match_count int DEFAULT 10
+-- )
+-- RETURNS TABLE (
+--     id INTEGER,
+--     content TEXT,
+--     embedding vector(1536),
+--     distance FLOAT
+-- ) AS $$
+-- BEGIN
+--     RETURN QUERY
+--     SELECT
+--         r.id,
+--         r.content,
+--         r.embedding,
+--         r.embedding <-> query_embedding AS distance
+--     FROM resume r
+--     WHERE r.embedding <-> query_embedding <= distance_threshold
+--     ORDER BY r.embedding <-> query_embedding
+--     LIMIT match_count;
+-- END;
+-- $$ LANGUAGE plpgsql;
