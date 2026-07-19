@@ -7,9 +7,23 @@ import { sendMessageRouter } from "./app/modules/mail/mail.router.js";
 
 const app = express();
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
-  : ["https://portfolio-june-26.onrender.com", "http://localhost:3000"];
+// Parse allowed origins from environment or use defaults
+// Handles both comma-separated list and falls back to common dev ports
+const parseOrigins = (envValue: string | undefined): string[] => {
+  if (!envValue || envValue.trim() === "") {
+    // Default origins: production + common dev ports
+    return [
+      "https://portfolio-june-26.onrender.com",
+      "http://localhost:3000",
+      "http://localhost:5000",
+      "http://127.0.0.1:3000",
+      "http://127.0.0.1:5000",
+    ];
+  }
+  return envValue.split(",").map((origin) => origin.trim()).filter(Boolean);
+};
+
+const allowedOrigins = parseOrigins(process.env.ALLOWED_ORIGINS);
 
 app.use(
   cors({
