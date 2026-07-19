@@ -9,7 +9,7 @@ const app = express();
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
-  : ["https://portfolio-june-26.onrender.com", "http://localhost:5000"];
+  : ["https://portfolio-june-26.onrender.com", "http://localhost:3000"];
 
 app.use(
   cors({
