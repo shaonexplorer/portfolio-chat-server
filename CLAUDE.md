@@ -86,6 +86,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working on code
 - No explicit health‑check endpoint besides the root GET.
 - The chat system prompt is hard‑coded; consider externalising it for easier tuning.
 
+## CORS Configuration
+
+The CORS middleware in `src/app.ts` allows requests from multiple origins:
+- **Production**: `https://portfolio-june-26.onrender.com`
+- **Development**: `http://localhost:3000`, `http://localhost:5000`, `http://127.0.0.1:3000`, `http://127.0.0.1:5000`
+
+To add custom origins, set the `ALLOWED_ORIGINS` environment variable in `.env`:
+```
+ALLOWED_ORIGINS=http://localhost:3000,https://yourdomain.com
+```
+
+The configuration handles empty strings and whitespace gracefully, falling back to defaults.
+
 ## Embedding Model Notes
 
 - Using **OpenAI text-embedding-3-small** which produces **1536-dimensional embeddings**.
