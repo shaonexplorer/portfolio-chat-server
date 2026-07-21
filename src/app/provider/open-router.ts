@@ -5,7 +5,7 @@ export const openrouter = createOpenRouter({
   apiKey: process.env.OPEN_ROUTER_API_KEY,
 });
 
-export const chatModel = openrouter("google/gemma-4-31b-it:free");
+export const chatModel = openrouter("poolside/laguna-xs-2.1:free");
 
 // Using OpenAI text-embedding-3-small which produces 1536-dimensional embeddings
 // This is compatible with PostgreSQL HNSW/IVFFlat indexes (max 2000 dimensions)
