@@ -4,9 +4,7 @@ import cookieParser from "cookie-parser";
 import { Request, Response, NextFunction } from "express";
 import { chatRouter } from "./app/modules/chat/chat.route.js";
 import { sendMessageRouter } from "./app/modules/mail/mail.router.js";
-import dotenv from "dotenv";
-
-dotenv.config();
+import "dotenv/config";
 
 const app = express();
 
@@ -16,8 +14,8 @@ const parseOrigins = (envValue: string | undefined): string[] => {
   if (!envValue || envValue.trim() === "") {
     // Default origins: production + common dev ports
     return [
-      "https://portfolio-june-26.onrender.com",
-      "https://portfolio-chat-server-2wxf.onrender.com",
+      "https://portfolio-june-26-virid.vercel.app",
+      "https://portfolio-chat-server-mick.vercel.app",
       "http://localhost:3000",
       "http://localhost:5000",
       "http://127.0.0.1:3000",

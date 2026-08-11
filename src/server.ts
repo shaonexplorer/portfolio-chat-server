@@ -2,7 +2,7 @@ import app from "./app.js";
 import { Server } from "http";
 
 import "dotenv/config";
-import { prisma } from "./app/lib/prisma.js";
+
 import { parseDoc } from "./app/utils/seed/parse-resume.js";
 import { embeddResume } from "./app/utils/seed/embedd.js";
 import { splitText } from "./app/utils/seed/text-splitter.js";
