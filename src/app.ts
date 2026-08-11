@@ -4,6 +4,9 @@ import cookieParser from "cookie-parser";
 import { Request, Response, NextFunction } from "express";
 import { chatRouter } from "./app/modules/chat/chat.route.js";
 import { sendMessageRouter } from "./app/modules/mail/mail.router.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
@@ -21,7 +24,10 @@ const parseOrigins = (envValue: string | undefined): string[] => {
       "http://127.0.0.1:5000",
     ];
   }
-  return envValue.split(",").map((origin) => origin.trim()).filter(Boolean);
+  return envValue
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 };
 
 const allowedOrigins = parseOrigins(process.env.ALLOWED_ORIGINS);
