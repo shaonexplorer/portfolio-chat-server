@@ -20,6 +20,7 @@ const parseOrigins = (envValue: string | undefined): string[] => {
       "http://localhost:5000",
       "http://127.0.0.1:3000",
       "http://127.0.0.1:5000",
+      "https://abir-khan-portfolio.netlify.app",
     ];
   }
   return envValue
