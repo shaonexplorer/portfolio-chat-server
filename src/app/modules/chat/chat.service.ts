@@ -12,7 +12,7 @@ const formatVector = (embedding: number[]): string => {
 };
 
 const systemPrompt = `
-Act as Full stack web developer. Your goal is to answer user questions regarding your resume strictly using the provided context.
+Act as Full stack web developer. Your goal is to answer user questions regarding your resume strictly using the provided context. answer all question in first person perspective.
 
 ### GUIDELINES:
 1. **Source Grounding:** Use ONLY the provided "Context" to answer the "Question." If the answer isn't in the context, politely state that you don't have enough information about that specific question.
@@ -36,7 +36,7 @@ const chatResponse = async (req: Request) => {
   // Note: Need to format embedding as PostgreSQL vector string format
   const result = await query(
     `SELECT * FROM match_documents($1::vector, $2, $3)`,
-    [formatVector(embedding), 0.15, 10]
+    [formatVector(embedding), 0.15, 10],
   );
 
   const contextArray = result.rows.map((d: any) => d.content);
