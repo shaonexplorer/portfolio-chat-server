@@ -1,14 +1,23 @@
-import { Pool } from "pg";
+import "dotenv/config"; // Ensure environment variables are loaded FIRST
+import pg from "pg";
 
-const neonConnectionString = process.env.DATABASE_URL as string;
+const { Pool } = pg;
+
+const neonConnectionString = process.env.DATABASE_URL;
+
+if (!neonConnectionString) {
+  throw new Error("DATABASE_URL environment variable is undefined or missing.");
+}
 
 // Create a connection pool for Neon PostgreSQL
 export const neonPool = new Pool({
   connectionString: neonConnectionString,
-  // Neon serverless recommendations
+  ssl: {
+    rejectUnauthorized: false, // Required for Neon cloud SSL connections
+  },
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 10000, // Increased to 10s to account for Neon cold starts
 });
 
 // Helper function to execute queries

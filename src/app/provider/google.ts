@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import { createGoogle } from '@ai-sdk/google';
 import "dotenv/config";
 
 const oAuth2Client = new google.auth.OAuth2(
@@ -13,3 +14,14 @@ oAuth2Client.setCredentials({
 });
 
 export const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
+
+
+
+
+
+const googleAi = createGoogle({
+  // custom settings
+  apiKey: process.env.GOOGLE_API_KEY,
+});
+
+export const embeddingModel = googleAi.embeddingModel('gemini-embedding-001');
