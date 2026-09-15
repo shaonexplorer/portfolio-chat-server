@@ -1,10 +1,15 @@
 import { embed, streamText } from "ai";
 import { Request } from "express";
-import { chatModel, embeddingModel } from "../../provider/open-router.js";
+ 
 import { query } from "../../provider/neon-db.js";
+import { chatModel } from "../../provider/qroq.js";
+import { embeddingModel } from "../../provider/google.js";
+ 
 
 // Embedding dimension for OpenAI text-embedding-3-small
-const EMBEDDING_DIMENSION = 1536;
+// const EMBEDDING_DIMENSION = 1536;
+const EMBEDDING_DIMENSION = 3072;
+
 
 // Helper function to convert embedding array to PostgreSQL vector string format
 const formatVector = (embedding: number[]): string => {

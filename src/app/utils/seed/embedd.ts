@@ -1,7 +1,9 @@
 import { embed } from "ai";
-import { embeddingModel } from "../../provider/open-router.js";
+ 
 import { EmbeddingModelV3Embedding } from "@ai-sdk/provider";
 import { query } from "../../provider/neon-db.js";
+import { embeddingModel } from "../../provider/google.js";
+ 
 
 // Helper function to convert embedding array to PostgreSQL vector string format
 const formatVector = (embedding: number[]): string => {
