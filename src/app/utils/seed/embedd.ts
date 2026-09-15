@@ -28,7 +28,7 @@ export const embeddResume = async (doc: string[]) => {
   console.log(`Generated ${result.length} embeddings`);
 
   // Detect embedding dimension
-  const dimension = result[0]?.embedding.length || 1536;
+  const dimension = result[0]?.embedding.length || 3072;
   console.log(`Embedding dimension: ${dimension}`);
 
   // 1. Enable pgvector extension
