@@ -17,6 +17,7 @@
     "@ai-sdk/google": "^4.0.70",
     "@ai-sdk/groq": "^4.0.41",
     "@ai-sdk/openai": "^4.0.66",
+    "@anthropic-ai/claude-code": "^2.1.267",
     "@langchain/textsplitters": "^1.0.1",
     "@openrouter/ai-sdk-provider": "^3.0.0",
     "@prisma/adapter-pg": "^7.2.0",
